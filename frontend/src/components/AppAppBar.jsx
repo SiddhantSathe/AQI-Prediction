@@ -14,7 +14,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 
 const logoStyle = {
-  width: '140px',
+  margin: '0 16px',
+  width: '40px',
   height: 'auto',
   cursor: 'pointer',
 };
@@ -83,13 +84,13 @@ function AppAppBar({ mode, toggleColorMode }) {
                 px: 0,
               }}
             >
-              {/* <img
+              <img
                 src={
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
+                  'https://img.icons8.com/?size=100&id=ZNNb7iEgKoW4&format=png&color=000000'
                 }
                 style={logoStyle}
-                alt="logo of sitemark"
-              /> */}
+                alt="logo of aqi"
+              />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 <MenuItem
                   onClick={() => scrollToSection('features')}
@@ -133,13 +134,13 @@ function AppAppBar({ mode, toggleColorMode }) {
                 </MenuItem>
               </Box>
             </Box>
-            <Box
+            {/* <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
                 gap: 0.5,
                 alignItems: 'center',
               }}
-            >
+            > */}
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
               {/* <Button
                 color="primary"
@@ -161,7 +162,7 @@ function AppAppBar({ mode, toggleColorMode }) {
               >
                 Sign up
               </Button> */}
-            </Box>
+            {/* </Box> */}
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
                 variant="text"
@@ -205,7 +206,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                   </MenuItem>
                   <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                   <Divider />
-                  <MenuItem>
+                  {/* <MenuItem>
                     <Button
                       color="primary"
                       variant="contained"
@@ -215,9 +216,9 @@ function AppAppBar({ mode, toggleColorMode }) {
                       sx={{ width: '100%' }}
                     >
                       Sign up
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
+                    </Button> */}
+                  {/* </MenuItem> */}
+                  {/* <MenuItem>
                     <Button
                       color="primary"
                       variant="outlined"
@@ -228,7 +229,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                     >
                       Sign in
                     </Button>
-                  </MenuItem>
+                  </MenuItem> */}
                 </Box>
               </Drawer>
             </Box>

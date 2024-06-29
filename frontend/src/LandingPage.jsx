@@ -31,7 +31,7 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
         bottom: 24,
       }}
     >
-      <ToggleButtonGroup
+      {/* <ToggleButtonGroup
         color="primary"
         exclusive
         value={showCustomTheme}
@@ -49,7 +49,7 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
           Custom theme
         </ToggleButton>
         <ToggleButton value={false}>Material Design 2</ToggleButton>
-      </ToggleButtonGroup>
+      </ToggleButtonGroup> */}
     </Box>
   );
 }
@@ -84,11 +84,11 @@ export default function LandingPage() {
         <LogoCollection />
         <Features />
         <Divider />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <Divider />
         <Highlights />
         <Divider />
-        <Pricing />
+        {/* <Pricing /> */}
         <Divider />
         <FAQ />
         <Divider />
