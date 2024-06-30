@@ -20,7 +20,7 @@ export default function LogoCollection() {
   const logos = theme.palette.mode === 'light' ? darkLogos : whiteLogos;
 
   return (
-    <Box id="logoCollection" sx={{ py: 4 }}>
+    <Box id="logoCollection" sx={{ py: 4, maxWidth: '100vx', overflow: 'hidden' }}>
       <Typography
         component="p"
         variant="subtitle2"

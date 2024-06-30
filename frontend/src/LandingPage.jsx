@@ -26,7 +26,7 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100dvw',
+        width: '100vw',
         position: 'fixed',
         bottom: 24,
       }}
@@ -80,11 +80,11 @@ export default function LandingPage() {
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Hero />
-      <Box sx={{ bgcolor: 'background.default' }}>
+      <Box sx={{ bgcolor: 'background.default', width: '100vw'}}>
         <LogoCollection />
         <Features />
         <Divider />
-        {/* <Testimonials /> */}
+        <Testimonials />
         <Divider />
         <Highlights />
         <Divider />
