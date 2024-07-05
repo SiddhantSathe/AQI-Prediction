@@ -1,0 +1,2 @@
+openbb==4.0.1
+openbb-core==1.0.1

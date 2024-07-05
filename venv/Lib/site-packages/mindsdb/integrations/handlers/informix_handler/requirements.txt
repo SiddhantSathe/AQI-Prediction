@@ -1,0 +1,2 @@
+IfxPy @ git+https://github.com/OpenInformix/IfxPy#subdirectory=IfxPy
+sqlalchemy-informix
