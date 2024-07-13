@@ -1,4 +1,5 @@
-import * as React from 'react';
+// import * as r from 'react';
+import React, {useState} from 'react';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,7 +9,41 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+
 export default function Hero() {
+
+  const [city, setCityName] = useState('');
+
+  const [isCityReceived, setCityReceived] = useState(false);
+  const [aqi, setAqi] = useState('');
+
+  const handleCityChange = (event) => {
+    setCityName(event.target.value);
+
+    setCityReceived(false);
+    setAqi('');
+  }
+  const handleSearchClick = async () => {
+    console.log(city);
+    try {
+      const response = await fetch('http://127.0.0.1:5000/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ city }),
+      });
+      if (response.ok){
+        const data = await response.json();
+        setAqi(data.aqi);
+        setCityReceived(true);
+        console.log(data);
+      }
+       // Process the response as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
   return (
     <Box
       id="hero"
@@ -78,12 +113,15 @@ export default function Hero() {
               placeholder="Enter Your City"
               inputProps={{
                 autoComplete: 'off',
-                'aria-label': 'Enter your email address',
+                'aria-label': 'Enter your city',
               }}
+              value={city}
+              onChange={handleCityChange}
             />
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={handleSearchClick}>
               Search
             </Button>
+            {isCityReceived && <Typography variant='body1'>City Received AQI is {aqi}</Typography>}
           </Stack>
           {/* <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
             By clicking &quot;Start now&quot; you agree to our&nbsp;
