@@ -4,13 +4,35 @@ import pandas as pd
 import numpy as np
 import ozon3 as ooo
 import mindsdb_sdk
+import os
+import dotenv
+
+dotenv.load_dotenv()
 
 
 app = Flask(__name__)
 CORS(app)
 
 #o3 api connection
-o3 = ooo.Ozon3('a7814c89aa2e739b9b06a51ae2dccf6dc9d9ef18')
+# o3 = ooo.Ozon3('a7814c89aa2e739b9b06a51ae2dccf6dc9d9ef18')
+o3 = ooo.Ozon3(os.environ['API_KEY_OOO'])
+
+# connect to mindsdb
+try:
+    server = mindsdb_sdk.connect()
+    print('Connected to MindsDB')
+except Exception as e:
+    print('Connection to MindsDB failed: ', e)
+
+try:
+  project = server.get_project('aqi')
+  print('Project "aqi" found')
+#   model = project.models.get('aqi_forecast_nixtla')
+#   print('Model "aqi_forecast_nixtla" found')
+except Exception as e:
+  print(f"project not found: {e}")
+    
+    
 
 @app.route('/search', methods=['POST'])
 
@@ -77,9 +99,4 @@ if __name__ == '__main__':
 #     table.add_column('forecasted_pm25', mindsdb_sdk.FLOAT)
 #     table.add_column('forecasted_pm10', mindsdb_sdk.FLOAT)
 #     table.add_column('forecasted_o3', mindsdb_sdk.FLOAT)
-
-#     #insert data
-#     city = input('Enter city name: ')
-#     city = o3.get_city_forecast(city)
-#     table.insert(city)
     
