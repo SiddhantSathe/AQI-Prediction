@@ -6,6 +6,11 @@ import ozon3 as ooo
 import mindsdb_sdk
 import os
 import dotenv
+from app.model import create_model
+from app.query import get_aqi_predictions
+
+model_instance = create_model()
+query_instance = get_aqi_predictions()
 
 dotenv.load_dotenv()
 
@@ -14,7 +19,6 @@ app = Flask(__name__)
 CORS(app)
 
 #o3 api connection
-# o3 = ooo.Ozon3('a7814c89aa2e739b9b06a51ae2dccf6dc9d9ef18')
 o3 = ooo.Ozon3(os.environ['API_KEY_OOO'])
 
 # connect to mindsdb
@@ -27,10 +31,9 @@ except Exception as e:
 try:
   project = server.get_project('aqi')
   print('Project "aqi" found')
-#   model = project.models.get('aqi_forecast_nixtla')
-#   print('Model "aqi_forecast_nixtla" found')
 except Exception as e:
-  print(f"project not found: {e}")
+    project = server.create_project('aqi')
+    print('Model aqi created and error:', e)
     
     
 
@@ -47,56 +50,96 @@ def handle_request():
 def get_data():
     data = request.json
     city = data.get('city')
-    data = o3.get_city_air(city)
+    data = o3.get_historical_data(city= city)
+    data = data.dropna()
     return data
 
-def data_cleaning():
-    data = get_data()
-    # if nan then remove that column
-    data = data.dropna(how='any', axis=1)
-    return data
+# def add_data():
+#     data = get_data()
+#     try:
+#         files_db = server.get_database('files')
+#         files_db.create_table('city_data', data)
+#         print('Data added')
+#     except:
+#         table = files_db.get_table('city_data')
+#         print('file table already exists')
+#     return table
+
+@app.route('/add_data', methods=['POST'])
+def add_data_route():
+    city = request.json.get('city')
+    data = o3.get_historical_data(city=city)
+    data = data.dropna()
+    try:
+        files_db = server.get_database('files')
+        files_db.create_table('city_data', data)
+        print('Data added')
+    except Exception as e:
+        table = files_db.get_table('city_data')
+        print('file table already exists', e)
+    return "Data processing complete"
+
+
+@app.route('/create_model', methods=['GET'])
+def create_model_route():
+    try:
+        model = model_instance  # Call the create_model function
+        return jsonify({'message': 'Model created successfully'}), 200  # Assuming the model object has an 'id' attribute
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# @app.route('/get_aqi_predictions', methods=['GET'])
+
+# def get_aqi_predictions(project= server.get_project('aqi'), limit=10):
+#     query = f"""
+#     SELECT m.date, m.`pm2.5` AS predicted_pm25, t.`pm2.5` AS actual_pm25 
+#     FROM files.historic_houston t 
+#     JOIN aqi_forecast_nixtla m
+#     WHERE t.date > LATEST
+#     LIMIT {limit}
+#     """
+#     return project.query(query)
+
+@app.route('/get_aqi_data', methods=['GET'])
+def get_aqi_data():
+    project = server.get_project('aqi')
+    results = get_aqi_predictions(project)
+    df = results.fetch()  # Assuming this returns a pandas DataFrame
+
+    filtered_df = df[['date', 'predicted_pm25']]
+
+    # Convert the DataFrame to a JSON object
+    df_json = filtered_df.to_json(orient='records')
+    
+    # Return the JSON data
+    return jsonify(df_json)
+
+
+# project = server.get_project('aqi')
+
+# results = get_aqi_predictions(project)
+# df = results.fetch()
 
 
 
+# def get_aqi_predictions(project, limit=10):
+#     query = f"""
+#     SELECT m.date, m.`pm2.5` AS predicted_pm25, t.`pm2.5` AS actual_pm25 
+#     FROM files.city_data t 
+#     JOIN aqi_forecast_nixtla m
+#     WHERE t.date > LATEST
+#     LIMIT {limit}
+#     """
+#     return project.query(query)
+
+# project = server.get_project('aqi')
+
+# results = get_aqi_predictions(project)
+# df = results.fetch()
+
+# print(df)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-# # connect to mindsdb
-# server = mindsdb_sdk.connect()
-
-# def predict_aqi():
-#     city = input('Enter city name: ')
-#     city = o3.get_city_forecast(city)
-#     aqi = 0
-#     for i in ['pm2.5', 'o3', 'pm10']:
-#         aqi += city[i]
-#     aqi = aqi/3
-#     return aqi
-
-# store data from api connection to mindsdb
-
-# def store_data():
-#     #create a new database
-#     db = server.create_database('aqi')
-#     #create a new table
-#     table = db.create_table('aqi_data')
-#     #add columns
-#     table.add_column('city', mindsdb_sdk.STRING)
-#     table.add_column('latitude', mindsdb_sdk.FLOAT)
-#     table.add_column('longitude', mindsdb_sdk.FLOAT)
-#     table.add_column('station', mindsdb_sdk.STRING)
-#     table.add_column('dominant_pollutant', mindsdb_sdk.STRING)
-#     table.add_column('timestamp', mindsdb_sdk.DATETIME)
-#     table.add_column('timestamp_timezone', mindsdb_sdk.TIME)
-#     table.add_column('avg_aqi', mindsdb_sdk.FLOAT)
-#     table.add_column('min_aqi', mindsdb_sdk.FLOAT)
-#     table.add_column('max_aqi', mindsdb_sdk.FLOAT)
-#     table.add_column('AQI_meaning', mindsdb_sdk.STRING)
-#     table.add_column('AQI_health_implications', mindsdb_sdk.STRING)
-#     table.add_column('forecasted_pm25', mindsdb_sdk.FLOAT)
-#     table.add_column('forecasted_pm10', mindsdb_sdk.FLOAT)
-#     table.add_column('forecasted_o3', mindsdb_sdk.FLOAT)
-    

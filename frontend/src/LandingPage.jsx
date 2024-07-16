@@ -82,17 +82,17 @@ export default function LandingPage() {
       <Hero />
       <Box sx={{ bgcolor: 'background.default', width: '100vw'}}>
         <LogoCollection />
-        <Features />
+        {/* <Features /> */}
         <Divider />
         <Testimonials />
-        <Divider />
+        {/* <Divider />
         <Highlights />
-        <Divider />
+        <Divider /> */}
         {/* <Pricing /> */}
         <Divider />
-        <FAQ />
+        {/* <FAQ />
         <Divider />
-        <Footer />
+        <Footer /> */}
       </Box>
       <ToggleCustomTheme
         showCustomTheme={showCustomTheme}

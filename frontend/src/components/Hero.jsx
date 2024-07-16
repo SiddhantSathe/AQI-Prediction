@@ -121,7 +121,7 @@ export default function Hero() {
             <Button variant="contained" color="primary" onClick={handleSearchClick}>
               Search
             </Button>
-            {isCityReceived && <Typography variant='body1'>City Received AQI is {aqi}</Typography>}
+            
           </Stack>
           {/* <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
             By clicking &quot;Start now&quot; you agree to our&nbsp;
@@ -130,8 +130,11 @@ export default function Hero() {
             </Link>
             .
           </Typography> */}
+<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  {isCityReceived && <Typography variant='body1' style={{ fontSize: '1.5rem' }}>City Received AQI is {aqi}</Typography>}
+</div>
         </Stack>
-        <Box
+        {/* <Box
           id="image"
           sx={(theme) => ({
             mt: { xs: 8, sm: 10 },
@@ -154,7 +157,8 @@ export default function Hero() {
                 ? `0 0 12px 8px ${alpha('#9CCCFC', 0.2)}`
                 : `0 0 24px 12px ${alpha('#033363', 0.2)}`,
           })}
-        />
+          
+        /> */}
       </Container>
     </Box>
   );
